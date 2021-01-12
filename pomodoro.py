@@ -3,7 +3,7 @@ import playsound #pip || pip3 install playsound
 
 M = 60 #Hay 60 segundos en un minuto
 POMODORO_WORKING_TIME = M*25 #25 minutos
-POMODORO_RESTING_TIME_LIGHT = M*3 #3 minutos
+POMODORO_RESTING_TIME_LIGHT = M*4 #4 minutos
 POMODORO_RESTING_TIME_HARD = M*30 #30 minutos
 BELL = "bell.mp3" #si no existe el archivo bell.mp3 en la raíz, no sonará nada cuando termine cada temporizador
 """
@@ -70,10 +70,56 @@ def changeTime():
 			pass
 		print("Ingrese un valor numerico valido mayor a 0")
 
+def getLocalConfig():
+	global POMODORO_WORKING_TIME, POMODORO_RESTING_TIME_LIGHT, POMODORO_RESTING_TIME_HARD, BELL
+	local_config = {}
+	#Si existe el archivo leelo
+	try:
+		with open("pomodoro.config", 'r') as file:
+			local_config = getInfoFromFile(file)
+			POMODORO_WORKING_TIME = int(local_config["POMODORO_WORKING_TIME"])*M
+			POMODORO_RESTING_TIME_LIGHT = int(local_config["POMODORO_RESTING_TIME_LIGHT"])*M
+			POMODORO_RESTING_TIME_HARD = int(local_config["POMODORO_RESTING_TIME_HARD"])*M
+			BELL = local_config["BELL"]
+			return int(local_config["pomodoros"])
+	#Si no existe crealo
+	except:
+		with open("pomodoro.config", 'w') as file:
+			#local_config = getInfoFromFile(file)
+			setInfoIntoFile(file, 0)
+			return 0
+
+def getInfoFromFile(file):
+	#Guarda la información del archivo
+	data_set = {}
+	#Lee cada linea del archivo
+	for line in file:
+		start_reading = 0
+		#Lee cada caracter de la linea
+		for index, char in enumerate(line):
+			#Consiguiendo la posición del punto clave =
+			if char == '=':
+				start_reading = index
+		#El nuevo elemento es (Todo lo que hay antes de = sin espacio) = (Todo lo que hay después de = sin espacios ni \n)
+		data_set[line[:start_reading].replace(" ", "")] = line[start_reading+1:].replace(" ", "").replace("\n", "")
+	return data_set
+
+def setInfoIntoFile(file, pomodoros):
+	file.write("pomodoros = %d\n"%(pomodoros))
+	file.write("POMODORO_WORKING_TIME = %d\n"%(POMODORO_WORKING_TIME//60))
+	file.write("POMODORO_RESTING_TIME_LIGHT = %d\n"%(POMODORO_RESTING_TIME_LIGHT//60))
+	file.write("POMODORO_RESTING_TIME_HARD = %d\n"%(POMODORO_RESTING_TIME_HARD//60))
+	file.write("BELL = %s"%(BELL))
+
+def setLocalConfig(pomodoros):
+	with open("pomodoro.config", 'w') as file:
+		setInfoIntoFile(file, pomodoros)
+
 def main():
 	global POMODORO_WORKING_TIME, POMODORO_RESTING_TIME_LIGHT, POMODORO_RESTING_TIME_HARD
 	#lleva la cuenta de cuantos pomodores se han realizado
-	pomodoros = 0
+	pomodoros = getLocalConfig()
+	#si existe un archivo de configuración le pone los pomodrores que este tiene, si no le asigan cero
 
 	while True:
 		#otiene un entero del menú
@@ -88,6 +134,8 @@ def main():
 			print("\n---Iniciando Pomodoro---")
 			startPomodoro(POMODORO_WORKING_TIME)
 			pomodoros +=1
+			setLocalConfig(pomodoros)
+
 
 			#Iniciar descanso
 			print("\n---DESCANSO ", end="")
@@ -95,6 +143,7 @@ def main():
 				print("LARGO---")
 				startPomodoro(POMODORO_RESTING_TIME_HARD)
 				pomodoros = 0
+				setLocalConfig(pomodoros)
 			else:						#Descanso corto
 				print("CORTO---")
 				startPomodoro(POMODORO_RESTING_TIME_LIGHT)
@@ -102,11 +151,12 @@ def main():
 		elif option == 2:	#Cambiar cantidad de pomodoros
 			print("\n---Cambiar número de pomodores actuales---")
 			pomodoros = changePomodoros()
+			setLocalConfig(pomodoros)
 
 		elif option == 3: 	#Cambiar tiempos del pomodoro
 			"""
 			ToDo
-			Refactorizar código para sacar el menu de tiempos a otra función
+			Refactorizar código para sacar el menu de los tiempos a otra función
 			"""
 			while True:
 				#Menú de los tiempos que se pueden cambiar
@@ -125,10 +175,13 @@ def main():
 						break
 					elif option_change_time == 1:	#Tiempo Trabajo
 						POMODORO_WORKING_TIME = changeTime()
+						setLocalConfig(pomodoros)
 					elif option_change_time == 2: 	#Tiempo Descanso Corto
 						POMODORO_RESTING_TIME_LIGHT = changeTime()
+						setLocalConfig(pomodoros)
 					elif option_change_time == 3:	#Tiempo Descanso Largo
 						POMODORO_RESTING_TIME_HARD = changeTime()
+						setLocalConfig(pomodoros)
 					else:
 						print("Opción aún no disponible, intente otra")
 				else:
