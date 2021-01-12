@@ -2,8 +2,8 @@ import time
 import playsound #pip || pip3 install playsound
 
 M = 60 #Hay 60 segundos en un minuto
-POMODORO_WORKING_TIME = M*.1 #25 minutos
-POMODORO_RESTING_TIME_LIGHT = M*.1 #3 minutos
+POMODORO_WORKING_TIME = M*25 #25 minutos
+POMODORO_RESTING_TIME_LIGHT = M*3 #3 minutos
 POMODORO_RESTING_TIME_HARD = M*30 #30 minutos
 BELL = "bell.mp3" #si no existe el archivo bell.mp3 en la raíz, no sonará nada cuando termine cada temporizador
 """
