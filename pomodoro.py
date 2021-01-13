@@ -147,9 +147,10 @@ def main():
 			print("\n---DESCANSO ", end="")
 			if pomodoros == MAX_POMODOROS: #Descanso largo
 				pomodoros = 0 	#Tiene que ir al inicio para evitar el bug de tener más pomodoros de los permitidos después de un descanso largo
+				setLocalConfig(pomodoros)# Se guarda inmediatamente después
 				print("LARGO---")
 				startPomodoro(POMODORO_RESTING_TIME_HARD)
-				setLocalConfig(pomodoros)
+				
 			else:						#Descanso corto
 				print("CORTO---")
 				startPomodoro(POMODORO_RESTING_TIME_LIGHT)
