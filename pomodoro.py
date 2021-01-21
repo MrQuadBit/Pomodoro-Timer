@@ -26,6 +26,7 @@ def menu(pomodoros):
 		print("( 1 ) Iniciar pomodoro")
 		print("( 2 ) Cambiar cantidad de pomodoros")
 		print("( 3 ) Cambiar tiempos \n\tTrabajando = %s\n\tDescanso corto = %s \n\tDescanso Largo = %s"%(secondsToMinutes(POMODORO_WORKING_TIME), secondsToMinutes(POMODORO_RESTING_TIME_LIGHT), secondsToMinutes(POMODORO_RESTING_TIME_HARD)))
+		print("( 4 ) Temporizador rápido")
 		print("( 0 ) Salir")
 		option = input()
 
@@ -195,7 +196,16 @@ def main():
 						print("Opción aún no disponible, intente otra")
 				else:
 					print("Opción no valida, vuelva a intentarlo")
-				
+	
+		elif option == 4:
+			print("\n---Temporizador Rápido---")
+			while True:
+				try:
+					aux_time = float(input("¿Cuántos minutos quieres poner en el temporizador?:\n"))*M
+					startPomodoro(aux_time)
+					break	
+				except:
+					print("Ingrese una cantidad valida")		
 		else: print("Esa opción no está listada, intente seleccionando otra")
 
 if __name__ == "__main__":
