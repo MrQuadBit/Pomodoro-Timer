@@ -22,7 +22,7 @@ def menu(pomodoros):
 		print("\n---Menú principal---")
 		print("¿Qué quieres hacer?")
 		print("( 1 ) Iniciar pomodoro")
-		print("( 2 ) Cambiar cantidad de pomodoros\n\tPomodoros Máximos = %d\n\tPomodoros Actuales = %d"%(MAX_POMODOROS, pomodoros))
+		print("( 2 ) Cambiar cantidad de pomodoros\n\tPomodoros Actuales = %d\n\tPomodoros Máximos = %d"%(pomodoros, MAX_POMODOROS))
 		print("( 3 ) Cambiar tiempos \n\tTrabajando = %s\n\tDescanso Corto = %s \n\tDescanso Largo = %s"%(secondsToMinutes(POMODORO_WORKING_TIME), secondsToMinutes(POMODORO_RESTING_TIME_LIGHT), secondsToMinutes(POMODORO_RESTING_TIME_HARD)))
 		print("( 4 ) Temporizador rápido")
 		print("( 0 ) Salir")
